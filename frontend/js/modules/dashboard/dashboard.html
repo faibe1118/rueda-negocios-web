@@ -1,0 +1,112 @@
+    <!doctype html>
+    <html lang="es">
+    <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>WorkSide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    </head>
+    <body class="bg-white font-sans overflow-x-hidden relative">
+
+    <!-- LOADER -->
+    <div id="loader" class="fixed inset-0 bg-white flex flex-col items-center justify-center z-50">
+        <h1 class="text-4xl font-extrabold text-[#138aec] animate__animated animate__pulse animate__infinite">
+            WorkSide
+        </h1>
+        <p class="text-gray-600 mt-3 animate__animated animate__fadeIn">Cargando...</p>
+    </div>
+
+    <!-- MAIN -->
+    <div id="mainContent" class="opacity-0">
+
+        <!-- HEADER -->
+        <header class="flex items-center justify-between px-10 py-3 border-b bg-white sticky top-0 z-40 shadow-sm animate__animated animate__fadeInDown">
+        <!-- Logo con efecto hover y clic -->
+        <h1 
+            id="logo" 
+            class="text-2xl font-bold text-[#111518] cursor-pointer transform transition-transform duration-300 hover:scale-110 hover:text-[#138aec]">
+            WorkSide
+        </h1>
+
+        <!-- Botones de acción -->
+        <div class="flex gap-4">
+            <button id="btnCrearUsuario" class="transform transition-transform duration-300 bg-green-600 text-white px-4 py-2 rounded-lg hover:scale-105">
+            Crear Usuario
+            </button>
+
+            <button class="transform transition-transform duration-300 bg-gray-700 text-white px-4 py-2 rounded-lg hover:scale-105">
+            Iniciar Sesión
+            </button>
+        </div>
+        </header>
+
+        <!-- HERO -->
+        <section class="px-10 flex flex-col items-center text-center py-16">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-[#111518] mb-4 opacity-0" data-animate="fadeInUp">
+            Conecta con Eventos que te Inspiran
+        </h1>
+        <p class="text-gray-600 text-lg mb-6 opacity-0" data-animate="fadeInUp" data-delay="200">
+            Descubre y participa en eventos que impulsan tu crecimiento personal y profesional.
+        </p>
+        <!-- Botón Buscar Eventos -->
+        <button 
+            class="transform transition-transform duration-300 bg-[#138aec] text-white px-6 py-3 rounded-lg shadow-lg hover:scale-105 opacity-0" 
+            data-animate="fadeInUp" 
+            data-delay="400">
+            Buscar Eventos
+        </button>
+        </section>
+
+        <!-- EVENTOS DESTACADOS -->
+        <section class="px-10 py-6">
+        <h2 class="text-2xl font-bold mb-4 opacity-0" data-animate="fadeInLeft">Eventos Destacados</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="transform transition-transform duration-300 bg-white rounded-lg shadow opacity-0 hover:shadow-xl hover:-translate-y-2" data-animate="zoomIn">
+            <div class="aspect-video bg-cover rounded-t-lg" style="background-image:url('https://picsum.photos/400/200')"></div>
+            <div class="p-4">
+                <h3 class="text-lg font-semibold">Conferencia Anual</h3>
+                <p class="text-gray-500 text-sm">20 de Julio, 2024</p>
+            </div>
+            </div>
+
+            <div class="transform transition-transform duration-300 bg-white rounded-lg shadow opacity-0 hover:shadow-xl hover:-translate-y-2" data-animate="zoomIn" data-delay="200">
+            <div class="aspect-video bg-cover rounded-t-lg" style="background-image:url('https://picsum.photos/401/200')"></div>
+            <div class="p-4">
+                <h3 class="text-lg font-semibold">Meetup Startups</h3>
+                <p class="text-gray-500 text-sm">25 de Julio, 2024</p>
+            </div>
+            </div>
+
+            <div class="transform transition-transform duration-300 bg-white rounded-lg shadow opacity-0 hover:shadow-xl hover:-translate-y-2" data-animate="zoomIn" data-delay="400">
+            <div class="aspect-video bg-cover rounded-t-lg" style="background-image:url('https://picsum.photos/402/200')"></div>
+            <div class="p-4">
+                <h3 class="text-lg font-semibold">Exposición de Arte</h3>
+                <p class="text-gray-500 text-sm">1 de Agosto, 2024</p>
+            </div>
+            </div>
+
+            <div class="transform transition-transform duration-300 bg-white rounded-lg shadow opacity-0 hover:shadow-xl hover:-translate-y-2" data-animate="zoomIn" data-delay="600">
+            <div class="aspect-video bg-cover rounded-t-lg" style="background-image:url('https://picsum.photos/403/200')"></div>
+            <div class="p-4">
+                <h3 class="text-lg font-semibold">Festival Música</h3>
+                <p class="text-gray-500 text-sm">15 de Agosto, 2024</p>
+            </div>
+            </div>
+        </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="bg-gray-100 py-6 mt-10 text-center opacity-0" data-animate="fadeInUp">
+        <p class="text-gray-600">© 2024 WorkSide. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="/frontend/js/modules/dashboard/dashboard.js"></script>
+    </body>
+    </html>
+
+
+
+
