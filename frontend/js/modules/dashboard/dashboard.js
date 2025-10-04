@@ -48,8 +48,11 @@
         document.getElementById("logo").addEventListener("click", () => {
         window.location.href = "/frontend/js/modules/dashboard/dashboard.html"; 
         });
-        document.getElementById("btnCrearUsuario").addEventListener("click", () => {
+        document.getElementById("btnIniciarSesion").addEventListener("click", () => {
     window.location.href = "/frontend/js/modules/login/login.html";
+    });
+        document.getElementById("btnCrearUsuario").addEventListener("click", () => {
+    window.location.href = "/frontend/js/modules/signing up/signing up.html";
     });
 
         
