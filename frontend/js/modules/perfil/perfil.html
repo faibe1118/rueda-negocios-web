@@ -1,0 +1,69 @@
+    <!doctype html>
+    <html lang="es">
+    <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>WorkSide - Perfil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    </head>
+    <body class="bg-gray-100 font-sans overflow-x-hidden relative">
+
+    <!-- LOADER -->
+    <div id="loader" class="fixed inset-0 bg-white flex flex-col items-center justify-center z-50">
+        <h1 class="text-4xl font-extrabold text-[#138aec] animate__animated animate__pulse animate__infinite">
+        WorkSide
+        </h1>
+        <p class="text-gray-600 mt-3 animate__animated animate__fadeIn">Cargando...</p>
+    </div>
+
+    <!-- MAIN -->
+    <div id="mainContent" class="opacity-0 min-h-screen flex flex-col">
+
+        <!-- HEADER -->
+        <header class="flex items-center justify-between px-10 py-3 border-b bg-white sticky top-0 z-40 shadow-sm animate__animated animate__fadeInDown">
+        <h1 
+            id="logo" 
+            class="text-2xl font-bold text-[#111518] cursor-pointer transform transition-transform duration-300 hover:scale-110 hover:text-[#138aec]">
+            WorkSide
+        </h1>
+
+        <button id="logoutBtn" class="bg-gray-700 text-white px-4 py-2 rounded-lg hover:scale-105 transform transition">
+            Cerrar Sesión
+        </button>
+        </header>
+
+        <!-- PERFIL -->
+        <main class="flex flex-1 items-center justify-center px-4 py-12">
+        <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-lg text-center animate__animated animate__fadeInUp">
+            <img id="profileImage" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Avatar" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-[#138aec] shadow">
+            
+            <h2 id="profileName" class="text-2xl font-bold text-gray-800 mb-2">Nombre del Usuario</h2>
+            <p id="profileEmail" class="text-gray-500 mb-6">correo@ejemplo.com</p>
+
+            <div class="space-y-3 text-left text-gray-700">
+            <div>
+                <p class="font-semibold">Eventos Creados:</p>
+                <p id="createdEvents">3</p>
+            </div>
+            <div>
+                <p class="font-semibold">Eventos Participando:</p>
+                <p id="joinedEvents">5</p>
+            </div>
+            </div>
+
+            <button id="editProfileBtn" class="mt-8 bg-[#138aec] text-white px-6 py-2 rounded-lg hover:scale-105 transform transition">
+            Editar Perfil
+            </button>
+        </div>
+        </main>
+
+        <footer class="bg-gray-100 py-6 text-center mt-auto">
+        <p class="text-gray-600">© 2024 WorkSide. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="/frontend/js/modules/perfil/perfil.js"></script>
+    </body>
+    </html>

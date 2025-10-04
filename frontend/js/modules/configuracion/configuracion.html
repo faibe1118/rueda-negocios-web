@@ -1,0 +1,94 @@
+    <!doctype html>
+    <html lang="es">
+    <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>WorkSide - Configuración</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    </head>
+    <body class="bg-gray-100 font-sans overflow-x-hidden relative">
+
+    <!-- LOADER -->
+    <div id="loader" class="fixed inset-0 bg-white flex flex-col items-center justify-center z-50">
+        <h1 class="text-4xl font-extrabold text-[#138aec] animate__animated animate__pulse animate__infinite">
+        WorkSide
+        </h1>
+        <p class="text-gray-600 mt-3 animate__animated animate__fadeIn">Cargando...</p>
+    </div>
+
+    <!-- MAIN -->
+    <div id="mainContent" class="opacity-0 min-h-screen flex flex-col">
+
+        <!-- HEADER -->
+        <header class="flex items-center justify-between px-10 py-3 border-b bg-white sticky top-0 z-40 shadow-sm animate__animated animate__fadeInDown">
+        <h1 
+            id="logo" 
+            class="text-2xl font-bold text-[#111518] cursor-pointer transform transition-transform duration-300 hover:scale-110 hover:text-[#138aec]">
+            WorkSide
+        </h1>
+
+        <button id="logoutBtn" class="bg-gray-700 text-white px-4 py-2 rounded-lg hover:scale-105 transform transition">
+            Cerrar Sesión
+        </button>
+        </header>
+
+        <!-- CONFIGURACIÓN -->
+        <main class="flex flex-1 items-center justify-center px-4 py-12">
+        <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-2xl animate__animated animate__fadeInUp">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Configuración General ⚙️</h2>
+
+            <!-- TEMA -->
+            <section class="mb-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">Tema del sitio</h3>
+            <div class="flex items-center gap-4">
+                <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="theme" value="light" class="text-[#138aec]" checked>
+                <span>🌞 Claro</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="theme" value="dark" class="text-[#138aec]">
+                <span>🌙 Oscuro</span>
+                </label>
+            </div>
+            </section>
+
+            <!-- IDIOMA -->
+            <section class="mb-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">Idioma</h3>
+            <select id="languageSelect" class="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#138aec] outline-none">
+                <option value="es">Español</option>
+                <option value="en">Inglés</option>
+                <option value="pt">Portugués</option>
+            </select>
+            </section>
+
+            <!-- NOTIFICACIONES -->
+            <section class="mb-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">Notificaciones</h3>
+            <label class="flex items-center gap-3 cursor-pointer">
+                <input type="checkbox" id="notifCheckbox" class="w-5 h-5 text-[#138aec]">
+                <span>Recibir notificaciones de nuevos eventos</span>
+            </label>
+            </section>
+
+            <div class="flex justify-end gap-4 mt-8">
+            <button id="saveConfigBtn" class="bg-[#138aec] text-white px-6 py-2 rounded-lg hover:scale-105 transform transition">
+                Guardar Cambios
+            </button>
+            <button id="resetConfigBtn" class="bg-gray-400 text-white px-6 py-2 rounded-lg hover:scale-105 transform transition">
+                Restablecer
+            </button>
+            </div>
+        </div>
+        </main>
+
+        <footer class="bg-gray-100 py-6 text-center mt-auto">
+        <p class="text-gray-600">© 2024 WorkSide. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="/frontend/js/modules/configuracion/configuracion.js"></script>
+    </body>
+    </html>

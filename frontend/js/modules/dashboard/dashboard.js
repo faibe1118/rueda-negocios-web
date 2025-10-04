@@ -52,7 +52,7 @@
     window.location.href = "/frontend/js/modules/login/login.html";
     });
         document.getElementById("btnCrearUsuario").addEventListener("click", () => {
-    window.location.href = "/frontend/js/modules/signing up/signing up.html";
+    window.location.href = "/frontend/js/modules/signing_up/signing_up.html";
     });
 
         
