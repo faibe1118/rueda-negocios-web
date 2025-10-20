@@ -5,8 +5,12 @@ const cors = require("cors");
 const path = require("path")
 
 const app = express();
+
+//middlewares
 app.use(cors());
 app.use(express.json());
+
+//archivos estaticos
 app.use(express.static(path.join(__dirname, "../frontend")));
 
 // Conexión a MongoDB
@@ -17,6 +21,10 @@ mongoose.connect(process.env.MONGO_URI)
 // Rutas básicas
 const userRoutes = require("./routes/users");
 app.use("/api/users", userRoutes);
+
+const authRoutes = require("./routes/auth");
+app.use("/api/auth", authRoutes);
+
 
 // Arrancar servidor
 const port = process.env.PORT || 4000;

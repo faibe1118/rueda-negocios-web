@@ -1,19 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/User");
+const userController = require("../controllers/userController");
 
-// GET: obtener todos los usuarios
-router.get("/", async (req, res) => {
-  const users = await User.find();
-  res.json(users);
-});
-
-// POST: crear usuario
-router.post("/", async (req, res) => {
-  const newUser = new User(req.body);
-  await newUser.save();
-  res.json(newUser);
-});
+router.post("/", userController.createUser);
 
 module.exports = router;
 
+
+/*
+// CRUD Usuarios
+router.post("/", userController.createUser);
+router.get("/", userController.getUsers);
+router.get("/:id", userController.getUserById);
+router.put("/:id", userController.updateUser);
+router.patch("/:id/estado", userController.updateEstado);
+router.delete("/:id", userController.deleteUser);
+
+module.exports = router;*/
