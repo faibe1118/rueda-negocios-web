@@ -1,0 +1,164 @@
+<!-- Additional JavaScript for enhanced interactions -->
+<script>
+    // Enhanced form validation
+    document.addEventListener('DOMContentLoaded', function() {
+        const forms = document.querySelectorAll('form');
+        
+        forms.forEach(form => {
+            const inputs = form.querySelectorAll('input, textarea, select');
+            
+            inputs.forEach(input => {
+                // Real-time validation
+                input.addEventListener('blur', function() {
+                    validateField(this);
+                });
+                
+                input.addEventListener('input', function() {
+                    if (this.classList.contains('error')) {
+                        validateField(this);
+                    }
+                });
+            });
+            
+            // Form submission with loading state
+            form.addEventListener('submit', function(e) {
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                
+                // Show loading state
+                submitBtn.innerHTML = `
+                    <span class="flex items-center justify-center">
+                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Procesando...
+                    </span>
+                `;
+                submitBtn.disabled = true;
+                
+                // Reset after 3 seconds (adjust based on your needs)
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 3000);
+            });
+        });
+    });
+    
+    function validateField(field) {
+        const isValid = field.checkValidity();
+        
+        if (isValid) {
+            field.classList.remove('error');
+            field.classList.add('valid');
+        } else {
+            field.classList.remove('valid');
+            field.classList.add('error');
+        }
+    }
+    
+    // Enhanced card interactions
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.card');
+        
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+                this.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.15)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+                this.style.boxShadow = '';
+            });
+            
+            // Add click animation
+            card.addEventListener('click', function() {
+                this.style.transform = 'translateY(-4px) scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                }, 150);
+            });
+        });
+    });
+    
+    // Smooth page transitions
+    function smoothPageTransition(url) {
+        const mainContent = document.getElementById('mainContent');
+        
+        mainContent.style.opacity = '0';
+        mainContent.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            window.location.href = url;
+        }, 300);
+    }
+    
+    // Add smooth transitions to all links
+    document.addEventListener('DOMContentLoaded', function() {
+        const links = document.querySelectorAll('a[href^="/"]');
+        
+        links.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                smoothPageTransition(this.href);
+            });
+        });
+    });
+    
+    // Enhanced button interactions
+    document.addEventListener('DOMContentLoaded', function() {
+        const buttons = document.querySelectorAll('button');
+        
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Create ripple effect
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = event.clientX - rect.left - size / 2;
+                const y = event.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple');
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+    });
+    
+    // Add ripple effect styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+        
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        button {
+            position: relative;
+            overflow: hidden;
+        }
+    `;
+    document.head.appendChild(style);
+</script>
+
+

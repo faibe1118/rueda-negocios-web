@@ -78,10 +78,13 @@
     });
 
     // Cerrar sesión
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-    localStorage.removeItem("user");
-    window.location.href = "/frontend/js/modules/dashboard/dashboard.html";
-    });
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.location.href = "/logout";
+      });
+    }
 
     // Logo → recargar página
     document.getElementById("logo").addEventListener("click", () => {

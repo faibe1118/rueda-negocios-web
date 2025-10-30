@@ -1,0 +1,236 @@
+<% /* Layout y datos se pasan desde Express con express-ejs-layouts */ %>
+
+<!-- Event Detail Section -->
+<section class="min-h-screen bg-gray-50 py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Back Button -->
+        <div class="mb-8" data-aos="fade-right">
+            <a href="/home" class="inline-flex items-center text-blue-600 hover:text-blue-700 transition-colors duration-300">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                Volver al inicio
+            </a>
+        </div>
+
+        <!-- Event Header -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8" data-aos="fade-up">
+            <div class="relative">
+                <img 
+                    src="<%= event.image || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80' %>" 
+                    alt="<%= event.title %>" 
+                    class="w-full h-64 md:h-80 object-cover"
+                >
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div class="absolute top-6 right-6">
+                    <span class="bg-white/90 backdrop-blur-sm text-gray-800 px-4 py-2 rounded-full text-sm font-medium">
+                        <%= event.category || 'Evento' %>
+                    </span>
+                </div>
+                <div class="absolute bottom-6 left-6 text-white">
+                    <h1 class="text-3xl md:text-4xl font-bold mb-2"><%= event.title %></h1>
+                    <p class="text-lg opacity-90"><%= event.description %></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Details -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- About Event -->
+                <div class="bg-white rounded-2xl shadow-lg p-8" data-aos="fade-up" data-aos-delay="100">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Acerca del Evento</h2>
+                    <div class="prose prose-lg text-gray-600">
+                        <p class="mb-4">
+                            <%= event.fullDescription || 'Este es un evento increíble que reúne a profesionales de la industria para compartir conocimientos, experiencias y crear conexiones valiosas. Únete a nosotros para una experiencia única de aprendizaje y networking.' %>
+                        </p>
+                        <p class="mb-4">
+                            Durante este evento tendrás la oportunidad de:
+                        </p>
+                        <ul class="list-disc list-inside space-y-2 mb-6">
+                            <li>Conectar con profesionales de la industria</li>
+                            <li>Aprender de expertos reconocidos</li>
+                            <li>Participar en sesiones interactivas</li>
+                            <li>Expandir tu red de contactos</li>
+                            <li>Descubrir nuevas oportunidades</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Agenda -->
+                <div class="bg-white rounded-2xl shadow-lg p-8" data-aos="fade-up" data-aos-delay="200">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Agenda del Evento</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-4 p-4 bg-blue-50 rounded-lg">
+                            <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                                09:00
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-900">Registro y Bienvenida</h3>
+                                <p class="text-gray-600 text-sm">Recepción de participantes y coffee break</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4 p-4 bg-green-50 rounded-lg">
+                            <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-white font-bold">
+                                10:00
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-900">Presentación Principal</h3>
+                                <p class="text-gray-600 text-sm">Charla magistral sobre las últimas tendencias</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4 p-4 bg-purple-50 rounded-lg">
+                            <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                                11:30
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-900">Sesión de Networking</h3>
+                                <p class="text-gray-600 text-sm">Actividades de conexión y colaboración</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4 p-4 bg-orange-50 rounded-lg">
+                            <div class="w-12 h-12 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold">
+                                13:00
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-900">Almuerzo y Clausura</h3>
+                                <p class="text-gray-600 text-sm">Comida y conclusiones del evento</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-8">
+                <!-- Event Info -->
+                <div class="bg-white rounded-2xl shadow-lg p-6" data-aos="fade-up" data-aos-delay="300">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6">Información del Evento</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900"><%= event.date || 'Fecha por definir' %></p>
+                                <p class="text-sm text-gray-500">Fecha del evento</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900"><%= event.location || 'Ubicación' %></p>
+                                <p class="text-sm text-gray-500">Lugar del evento</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900"><%= event.participants || '50' %> participantes</p>
+                                <p class="text-sm text-gray-500">Personas registradas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="bg-white rounded-2xl shadow-lg p-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="space-y-4">
+                        <button class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                            <span class="flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                Registrarse al Evento
+                            </span>
+                        </button>
+                        
+                        <button class="w-full bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 py-3 rounded-xl font-semibold hover:from-gray-200 hover:to-gray-300 transform hover:scale-105 transition-all duration-300">
+                            <span class="flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
+                                </svg>
+                                Compartir Evento
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Organizer -->
+                <div class="bg-white rounded-2xl shadow-lg p-6" data-aos="fade-up" data-aos-delay="500">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Organizador</h3>
+                    <div class="flex items-center space-x-4">
+                        <img 
+                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" 
+                            alt="Organizador" 
+                            class="w-12 h-12 rounded-full"
+                        >
+                        <div>
+                            <p class="font-semibold text-gray-900">user</p>
+                            <p class="text-sm text-gray-500">Organizador Principal</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Registration button functionality
+        const registerBtn = document.querySelector('button[class*="from-blue-600"]');
+        if (registerBtn) {
+            registerBtn.addEventListener('click', function() {
+                // Simulate registration process
+                this.innerHTML = '<span class="flex items-center justify-center"><svg class="w-5 h-5 mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>Registrando...</span>';
+                
+                setTimeout(() => {
+                    this.innerHTML = '<span class="flex items-center justify-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>¡Registrado!</span>';
+                    this.classList.remove('from-blue-600', 'to-blue-700', 'hover:from-blue-700', 'hover:to-blue-800');
+                    this.classList.add('from-green-600', 'to-green-700', 'hover:from-green-700', 'hover:to-green-800');
+                }, 2000);
+            });
+        }
+        
+        // Share button functionality
+        const shareBtn = document.querySelector('button[class*="from-gray-100"]');
+        if (shareBtn) {
+            shareBtn.addEventListener('click', function() {
+                if (navigator.share) {
+                    navigator.share({
+                        title: '<%= event.title %>',
+                        text: '<%= event.description %>',
+                        url: window.location.href
+                    });
+                } else {
+                    // Fallback: copy to clipboard
+                    navigator.clipboard.writeText(window.location.href).then(() => {
+                        this.innerHTML = '<span class="flex items-center justify-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>¡Enlace copiado!</span>';
+                        setTimeout(() => {
+                            this.innerHTML = '<span class="flex items-center justify-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path></svg>Compartir Evento</span>';
+                        }, 2000);
+                    });
+                }
+            });
+        }
+    });
+</script>
