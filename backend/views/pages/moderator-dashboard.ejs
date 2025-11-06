@@ -1,0 +1,186 @@
+
+<section class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8" data-aos="fade-up">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Panel de Moderador</h1>
+            <p class="text-gray-600">Gestiona usuarios, eventos y PQRS</p>
+        </div>
+        
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Usuarios Pendientes -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 cursor-pointer" 
+                 onclick="window.location.href='/moderator/usuarios'" data-aos="fade-up" data-aos-delay="100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Usuarios Pendientes</p>
+                        <p class="text-3xl font-bold text-gray-900" id="pendingUsersCount">-</p>
+                    </div>
+                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Eventos Pendientes -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 cursor-pointer" 
+                 onclick="window.location.href='/moderator/eventos'" data-aos="fade-up" data-aos-delay="200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Eventos Pendientes</p>
+                        <p class="text-3xl font-bold text-gray-900" id="pendingEventsCount">-</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PQRS Pendientes -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 cursor-pointer" 
+                 onclick="window.location.href='/moderator/pqrs'" data-aos="fade-up" data-aos-delay="300">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">PQRS Pendientes</p>
+                        <p class="text-3xl font-bold text-gray-900" id="pendingPQRSCount">-</p>
+                    </div>
+                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Total Usuarios -->
+            <div class="bg-white rounded-2xl shadow-lg p-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Total Usuarios</p>
+                        <p class="text-3xl font-bold text-gray-900" id="totalUsersCount">-</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a href="/moderator/usuarios" class="bg-white rounded-2xl shadow-lg p-6" data-aos="fade-up" data-aos-delay="500">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-900">Gestionar Usuarios</h3>
+                        <p class="text-sm text-gray-600">Aprobar o rechazar usuarios</p>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="/moderator/eventos" class="bg-white rounded-2xl shadow-lg p-6" data-aos="fade-up" data-aos-delay="600">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-900">Gestionar Eventos</h3>
+                        <p class="text-sm text-gray-600">Aprobar o rechazar eventos</p>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="/moderator/pqrs" class="bg-white rounded-2xl shadow-lg p-6" data-aos="fade-up" data-aos-delay="700">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-900">Gestionar PQRS</h3>
+                        <p class="text-sm text-gray-600">Responder peticiones y quejas</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<script>
+// Prevenir cualquier redirect o alert no deseado
+window.addEventListener('beforeunload', function(e) {
+    // Solo prevenir si realmente es necesario
+});
+
+document.addEventListener('DOMContentLoaded', async function() {
+    // Datos mock para visualización del frontend
+    // En producción, estos datos vendrán de la API
+    
+    // Simular carga de datos
+    setTimeout(() => {
+        document.getElementById('pendingUsersCount').textContent = '12';
+        document.getElementById('pendingEventsCount').textContent = '8';
+        document.getElementById('pendingPQRSCount').textContent = '5';
+        document.getElementById('totalUsersCount').textContent = '156';
+    }, 500);
+
+    // Si hay token, intentar cargar datos reales
+    const token = localStorage.getItem('token');
+    if (token) {
+        try {
+            const [usersRes, eventsRes, pqrsRes] = await Promise.all([
+                fetch('/api/moderator/users?estado=pendiente', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }).catch(() => null),
+                fetch('/api/moderator/events/pending', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }).catch(() => null),
+                fetch('/api/moderator/pqrs?estado=pendiente', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }).catch(() => null)
+            ]);
+
+            if (usersRes && usersRes.ok) {
+                const users = await usersRes.json();
+                document.getElementById('pendingUsersCount').textContent = users.length;
+            }
+
+            if (eventsRes && eventsRes.ok) {
+                const events = await eventsRes.json();
+                document.getElementById('pendingEventsCount').textContent = events.length;
+            }
+
+            if (pqrsRes && pqrsRes.ok) {
+                const pqrs = await pqrsRes.json();
+                document.getElementById('pendingPQRSCount').textContent = pqrs.length;
+            }
+
+            const totalUsersRes = await fetch('/api/moderator/users', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            }).catch(() => null);
+            
+            if (totalUsersRes && totalUsersRes.ok) {
+                const allUsers = await totalUsersRes.json();
+                document.getElementById('totalUsersCount').textContent = allUsers.length;
+            }
+        } catch (error) {
+            console.log('Modo solo frontend - usando datos mock');
+        }
+    }
+});
+</script>
+

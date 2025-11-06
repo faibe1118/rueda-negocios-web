@@ -1,0 +1,330 @@
+
+<section class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8" data-aos="fade-up">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestión de Eventos</h1>
+                    <p class="text-gray-600">Aprueba o rechaza eventos creados por usuarios</p>
+                </div>
+                <a href="/moderator" class="text-blue-600 hover:text-blue-700 font-medium">
+                    ← Volver al Panel
+                </a>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="mb-6 flex gap-4" data-aos="fade-up" data-aos-delay="100">
+            <button onclick="loadEvents('pendiente')" class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 font-medium">
+                Pendientes
+            </button>
+            <button onclick="loadEvents('aprobado')" class="px-4 py-2 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 font-medium">
+                Aprobados
+            </button>
+            <button onclick="loadEvents('rechazado')" class="px-4 py-2 bg-red-100 text-red-800 rounded-lg hover:bg-red-200 font-medium">
+                Rechazados
+            </button>
+            <button onclick="loadEvents('')" class="px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 font-medium">
+                Todos
+            </button>
+        </div>
+
+        <!-- Events List -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+            <div id="eventsList" class="p-6">
+                <div class="text-center py-12">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                    <p class="mt-4 text-gray-600">Cargando eventos...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal for Event Details -->
+<div id="eventModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Detalles del Evento</h2>
+                <button onclick="closeEventModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="eventDetails" class="space-y-4"></div>
+            <div class="mt-6 flex gap-4">
+                <button onclick="approveEvent()" class="flex-1 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 font-medium">
+                    Aprobar
+                </button>
+                <button onclick="rejectEvent()" class="flex-1 bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 font-medium">
+                    Rechazar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentFilter = 'pendiente';
+let currentEventId = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadEvents('pendiente');
+});
+
+async function loadEvents(estado) {
+    currentFilter = estado;
+    const token = localStorage.getItem('token');
+    
+    // Datos mock
+    const mockEvents = [
+        {
+            _id: '1',
+            nombreEvento: 'Conferencia de Tecnología',
+            descripcion: 'Evento sobre las últimas tendencias en tecnología',
+            descripcionCompleta: 'Una conferencia completa sobre las últimas innovaciones tecnológicas',
+            fecha: new Date(),
+            ubicacion: 'Centro de Convenciones',
+            categoria: 'Tecnología',
+            capacidadMaxima: 200,
+            estado: estado || 'pendiente',
+            creador: { nombreEmpresa: 'Empresa Tech', email: 'tech@example.com' },
+            participantes: []
+        },
+        {
+            _id: '2',
+            nombreEvento: 'Workshop de Desarrollo',
+            descripcion: 'Taller práctico de desarrollo web',
+            descripcionCompleta: 'Aprende desarrollo web con ejercicios prácticos',
+            fecha: new Date(Date.now() + 86400000),
+            ubicacion: 'Coworking Space',
+            categoria: 'Educación',
+            capacidadMaxima: 50,
+            estado: estado || 'pendiente',
+            creador: { nombreEmpresa: 'Academia Dev', email: 'academia@example.com' },
+            participantes: []
+        }
+    ].filter(e => !estado || e.estado === estado);
+
+    if (!token) {
+        setTimeout(() => displayEvents(mockEvents), 300);
+        return;
+    }
+
+    const url = estado ? `/api/events?estado=${estado}` : '/api/events';
+    
+    try {
+        const res = await fetch(url, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) throw new Error('Error al cargar eventos');
+
+        const events = await res.json();
+        displayEvents(events);
+    } catch (error) {
+        console.log('Modo solo frontend - usando datos mock');
+        displayEvents(mockEvents);
+    }
+}
+
+function displayEvents(events) {
+    const container = document.getElementById('eventsList');
+    
+    if (events.length === 0) {
+        container.innerHTML = `
+            <div class="text-center py-12">
+                <p class="text-gray-600">No hay eventos con este estado</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = events.map(event => `
+        <div class="border-b border-gray-200 last:border-0 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex-1">
+                    <div class="flex items-center gap-4">
+                        ${event.imagen ? `
+                            <img src="${event.imagen}" alt="${event.nombreEvento}" class="w-20 h-20 object-cover rounded-lg">
+                        ` : ''}
+                        <div>
+                            <h3 class="font-semibold text-gray-900">${event.nombreEvento}</h3>
+                            <p class="text-sm text-gray-600">${event.descripcion || 'Sin descripción'}</p>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="px-2 py-1 text-xs rounded-full ${
+                                    event.estado === 'aprobado' ? 'bg-green-100 text-green-800' :
+                                    event.estado === 'rechazado' ? 'bg-red-100 text-red-800' :
+                                    'bg-yellow-100 text-yellow-800'
+                                }">
+                                    ${event.estado}
+                                </span>
+                                <span class="text-xs text-gray-500">
+                                    ${event.ubicacion || 'Sin ubicación'}
+                                </span>
+                                <span class="text-xs text-gray-500">
+                                    ${new Date(event.fecha).toLocaleDateString('es-ES')}
+                                </span>
+                                ${event.creador ? `
+                                    <span class="text-xs text-gray-500">
+                                        Por: ${event.creador.nombreEmpresa || event.creador.email}
+                                    </span>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="viewEventDetails('${event._id}')" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 font-medium">
+                        Ver Detalles
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+async function viewEventDetails(eventId) {
+    currentEventId = eventId;
+    const token = localStorage.getItem('token');
+    
+    // Datos mock
+    const mockEvent = {
+        _id: eventId,
+        nombreEvento: 'Conferencia de Tecnología',
+        descripcion: 'Evento sobre las últimas tendencias en tecnología',
+        descripcionCompleta: 'Una conferencia completa sobre las últimas innovaciones tecnológicas que reúne a expertos de la industria.',
+        fecha: new Date(),
+        ubicacion: 'Centro de Convenciones',
+        categoria: 'Tecnología',
+        capacidadMaxima: 200,
+        estado: 'pendiente',
+        creador: { nombreEmpresa: 'Empresa Tech', email: 'tech@example.com', sector: 'Tecnología' },
+        participantes: []
+    };
+    
+    if (!token) {
+        displayEventModal(mockEvent);
+        return;
+    }
+    
+    try {
+        const res = await fetch(`/api/events/${eventId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) throw new Error('Error al cargar evento');
+
+        const event = await res.json();
+        displayEventModal(event);
+    } catch (error) {
+        console.log('Modo solo frontend - usando datos mock');
+        displayEventModal(mockEvent);
+    }
+}
+
+function displayEventModal(event) {
+    const details = document.getElementById('eventDetails');
+    details.innerHTML = `
+        ${event.imagen ? `
+            <img src="${event.imagen}" alt="${event.nombreEvento}" class="w-full h-48 object-cover rounded-lg mb-4">
+        ` : ''}
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <p class="text-sm text-gray-600">Nombre</p>
+                <p class="font-semibold">${event.nombreEvento}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Estado</p>
+                <p class="font-semibold">${event.estado}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Fecha</p>
+                <p class="font-semibold">${new Date(event.fecha).toLocaleDateString('es-ES')}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Ubicación</p>
+                <p class="font-semibold">${event.ubicacion || 'N/A'}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Categoría</p>
+                <p class="font-semibold">${event.categoria || 'N/A'}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Capacidad</p>
+                <p class="font-semibold">${event.capacidadMaxima || 'Sin límite'}</p>
+            </div>
+        </div>
+        <div class="mt-4 pt-4 border-t">
+            <p class="text-sm text-gray-600 mb-2">Descripción</p>
+            <p class="text-gray-900">${event.descripcion || 'Sin descripción'}</p>
+        </div>
+        ${event.descripcionCompleta ? `
+            <div class="mt-4 pt-4 border-t">
+                <p class="text-sm text-gray-600 mb-2">Descripción Completa</p>
+                <p class="text-gray-900">${event.descripcionCompleta}</p>
+            </div>
+        ` : ''}
+        ${event.creador ? `
+            <div class="mt-4 pt-4 border-t">
+                <p class="text-sm font-semibold text-gray-700 mb-2">Creador</p>
+                <p class="text-sm text-gray-600">${event.creador.nombreEmpresa || event.creador.email}</p>
+            </div>
+        ` : ''}
+        <div class="mt-4 pt-4 border-t">
+            <p class="text-sm text-gray-600">Participantes: ${event.participantes ? event.participantes.length : 0}</p>
+        </div>
+    `;
+    document.getElementById('eventModal').classList.remove('hidden');
+}
+
+function closeEventModal() {
+    document.getElementById('eventModal').classList.add('hidden');
+    currentEventId = null;
+}
+
+async function approveEvent() {
+    if (!currentEventId) return;
+    await updateEventStatus(currentEventId, 'aprobado');
+}
+
+async function rejectEvent() {
+    if (!currentEventId) return;
+    await updateEventStatus(currentEventId, 'rechazado');
+}
+
+async function updateEventStatus(eventId, estado) {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+        alert(`Evento ${estado} exitosamente (modo demo)`);
+        closeEventModal();
+        loadEvents(currentFilter);
+        return;
+    }
+    
+    try {
+        const res = await fetch(`/api/moderator/events/${eventId}/estado`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ estado })
+        });
+
+        if (!res.ok) throw new Error('Error al actualizar estado');
+
+        alert(`Evento ${estado} exitosamente`);
+        closeEventModal();
+        loadEvents(currentFilter);
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al actualizar estado del evento');
+    }
+}
+</script>
+
