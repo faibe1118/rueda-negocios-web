@@ -147,6 +147,11 @@
                 const data = await response.json();
                 
                 if (response.ok) {
+                    // Guardar token en localStorage
+                    if (data.token) {
+                        localStorage.setItem('token', data.token);
+                    }
+                    
                     // Success animation
                     submitBtn.innerHTML = `
                         <span class="flex items-center justify-center">
@@ -157,9 +162,18 @@
                         </span>
                     `;
                     
+                    // Redirigir según el rol
+                    const userRole = data.user?.role;
+                    let redirectUrl = '/dashboard';
+                    
+                    // Si es moderador, redirigir al panel de moderador
+                    if (userRole === 'adminSistema' || userRole === 'adminEvento') {
+                        redirectUrl = '/moderator';
+                    }
+                    
                     // Redirect after success
                     setTimeout(() => {
-                        window.location.href = '/dashboard';
+                        window.location.href = redirectUrl;
                     }, 1500);
                 } else {
                     throw new Error(data.message || 'Error al iniciar sesión');

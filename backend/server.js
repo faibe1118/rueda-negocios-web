@@ -14,6 +14,17 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(expressLayouts);
 app.set('layout', 'layouts/main');
 
+// Middleware para layouts personalizados
+app.use((req, res, next) => {
+    // Si es una ruta de moderador, usar layout de moderador
+    if (req.path.startsWith('/moderator')) {
+        res.locals.layout = 'layouts/moderator'; // Layout de moderador
+    } else {
+        res.locals.layout = 'layouts/main'; // Layout por defecto para otras rutas
+    }
+    next();
+});
+
 //middlewares
 app.use(cors());
 app.use(express.json());
@@ -41,6 +52,15 @@ app.use("/api/users", userRoutes);
 
 const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
+
+const eventRoutes = require("./routes/events");
+app.use("/api/events", eventRoutes);
+
+const moderatorRoutes = require("./routes/moderator");
+app.use("/api/moderator", moderatorRoutes);
+
+const pqrsRoutes = require("./routes/pqrs");
+app.use("/api/pqrs", pqrsRoutes);
 
 // Rutas de páginas
 const pageRoutes = require("./routes/pages");

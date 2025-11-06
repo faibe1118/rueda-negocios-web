@@ -1,4 +1,4 @@
-const jws = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
 //verifica que el token sea valido
@@ -7,14 +7,14 @@ exports.verificarToken = async (req, res, next) => {
         //leer el token del encabezado authorization
         const authHeader = req.headers.authorization;
         if(!authHeader || !authHeader.startsWith("Bearer ")){
-            return res.status(401).json({ message: "Acceso denegado. Token no proporcioando"});
+            return res.status(401).json({ message: "Acceso denegado. Token no proporcionado"});
         }
 
         //extraer el token
-        const tpken = authHeader.split(" ")[1];
+        const token = authHeader.split(" ")[1];
 
         //verificar token
-        const decoded = JsonWebTokenError.verify(TokenExpiredError, process.env.JWT_SECRET || "miSecretoSuperSeguro");
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || "miSecretoSuperSeguro");
 
         //buscar usuario por ID y adjuntarlo al request
         const user = await User.findById(decoded.id).select("-password");
@@ -22,7 +22,7 @@ exports.verificarToken = async (req, res, next) => {
             return res.status(404).json({message: "Usuario no encontrado"});
         }
 
-        req.user = user; //ahora el  req.user contiene los datos del user autentucado
+        req.user = user; //ahora el  req.user contiene los datos del user autenticado
         next();
     }catch(err){
         console.error("Error en verificacion de token: ",err);

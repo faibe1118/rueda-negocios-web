@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title || 'Panel de Moderador - WorkSide' %></title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <!-- AOS (Animate On Scroll) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Enhanced Animations CSS -->
+    <link rel="stylesheet" href="/css/enhanced-animations.css">
+    
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Custom animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes dots {
+            0%, 20% {
+                content: '';
+            }
+            40% {
+                content: '.';
+            }
+            60% {
+                content: '..';
+            }
+            80%, 100% {
+                content: '...';
+            }
+        }
+        
+        /* Custom classes */
+        .animate-fadeInUp {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .animate-pulse-slow {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #138aec, #667eea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .loading-dots {
+            display: inline-block;
+        }
+        
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #138aec;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0f6bb8;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans overflow-x-hidden">
+    
+    <!-- Enhanced Loader - Solo para dashboard -->
+    <% if (typeof currentPage !== 'undefined' && currentPage === 'moderator') { %>
+    <div id="loader" class="fixed inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-center z-50">
+        <div class="text-center">
+            <div class="animate-float mb-4">
+                <h1 class="text-6xl font-extrabold gradient-text animate-pulse-slow">
+                    Panel de Moderador
+                    <span class="text-sm text-gray-600">WorkSide</span>
+                </h1>
+            </div>
+            <div class="flex justify-center space-x-2 mb-4">
+                <div class="w-3 h-3 bg-blue-500 rounded-full animate-bounce"></div>
+                <div class="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                <div class="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+            </div>
+            <p class="text-gray-600 animate-fadeInUp loading-dots">Cargando</p>
+        </div>
+    </div>
+    <% } %>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="<%= (typeof currentPage !== 'undefined' && currentPage === 'moderator') ? 'opacity-0' : '' %> min-h-screen">
+        
+        <!-- Moderator Header -->
+        <header class="bg-white sticky top-0 z-40 shadow-md border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <!-- Logo -->
+                    <a href="/moderator" class="text-2xl font-bold text-gray-900 cursor-pointer">
+                        <span class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">WorkSide</span>
+                    </a>
+
+                    <!-- Navigation -->
+                    <nav class="hidden md:flex space-x-8">
+                        <a href="/moderator" class="text-gray-700 hover:text-blue-600 transition-colors duration-300 <%= currentPage === 'moderator' ? 'text-blue-600 font-semibold' : '' %>">
+                            Dashboard
+                        </a>
+                        <a href="/moderator/usuarios" class="text-gray-700 hover:text-blue-600 transition-colors duration-300 <%= currentPage === 'moderator-usuarios' ? 'text-blue-600 font-semibold' : '' %>">
+                            Usuarios
+                        </a>
+                        <a href="/moderator/eventos" class="text-gray-700 hover:text-blue-600 transition-colors duration-300 <%= currentPage === 'moderator-eventos' ? 'text-blue-600 font-semibold' : '' %>">
+                            Eventos
+                        </a>
+                        <a href="/moderator/pqrs" class="text-gray-700 hover:text-blue-600 transition-colors duration-300 <%= currentPage === 'moderator-pqrs' ? 'text-blue-600 font-semibold' : '' %>">
+                            PQRS
+                        </a>
+                    </nav>
+
+                    <!-- Actions -->
+                        <!-- User Menu Dropdown -->
+                        <div class="relative" id="userMenuContainer">
+                            <button id="userMenuBtn" class="flex items-center space-x-2 bg-gray-100 px-4 py-2 rounded-lg text-sm hover:bg-gray-200">
+                                <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
+                                    <span class="text-white font-semibold text-xs" id="userInitial">M</span>
+                                </div>
+                                <span class="text-gray-900 font-medium" id="userName">Moderador</span>
+                                <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            
+                            <!-- Dropdown Menu -->
+                            <div id="userMenuDropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                                <div class="py-2">
+                                    <div class="px-4 py-3 border-b border-gray-200">
+                                        <p class="text-sm font-semibold text-gray-900" id="dropdownUserName">Moderador</p>
+                                        <p class="text-xs text-gray-600 truncate" id="dropdownUserEmail">email@example.com</p>
+                                    </div>
+                                    <a href="/moderator/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <div class="flex items-center space-x-2">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                            </svg>
+                                            <span>Mi Perfil</span>
+                                        </div>
+                                    </a>
+                                    <a href="/moderator" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <div class="flex items-center space-x-2">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                            </svg>
+                                            <span>Dashboard</span>
+                                        </div>
+                                    </a>
+                                    <div class="border-t border-gray-200 mt-2"></div>
+                                    <button id="dropdownLogoutBtn" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                        <div class="flex items-center space-x-2">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                            </svg>
+                                            <span>Cerrar Sesión</span>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="flex-1">
+            <%- body %>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-white py-8 mt-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <p class="text-gray-400 text-sm">© 2024 WorkSide - Panel de Moderador</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="/js/performance.js"></script>
+    <script>
+        // Initialize AOS
+        if (typeof AOS !== 'undefined') {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true,
+                offset: 100
+            });
+        }
+
+        // Enhanced loader functionality - Solo para dashboard
+        <% if (typeof currentPage !== 'undefined' && currentPage === 'moderator') { %>
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('loader');
+            const mainContent = document.getElementById('mainContent');
+            
+            if (loader && mainContent) {
+                setTimeout(() => {
+                    loader.style.opacity = '0';
+                    loader.style.transform = 'scale(0.8)';
+                    mainContent.style.opacity = '1';
+                    
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                    }, 500);
+                }, 1500);
+            }
+        });
+        <% } %>
+
+        // Load user data and setup menu
+        document.addEventListener('DOMContentLoaded', async function() {
+            const token = localStorage.getItem('token');
+            
+            // Load user profile data
+            if (token) {
+                try {
+                    const res = await fetch('/api/moderator/profile', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    
+                    if (res.ok) {
+                        const user = await res.json();
+                        updateUserMenu(user);
+                    }
+                } catch (error) {
+                    console.log('Error loading user data:', error);
+                }
+            }
+
+            // Setup dropdown menu
+            const userMenuBtn = document.getElementById('userMenuBtn');
+            const userMenuDropdown = document.getElementById('userMenuDropdown');
+            
+            if (userMenuBtn && userMenuDropdown) {
+                userMenuBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    userMenuDropdown.classList.toggle('hidden');
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!userMenuBtn.contains(e.target) && !userMenuDropdown.contains(e.target)) {
+                        userMenuDropdown.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Logout functionality
+            const dropdownLogoutBtn = document.getElementById('dropdownLogoutBtn');
+            
+            function handleLogout() {
+                localStorage.removeItem('token');
+                window.location.href = '/home';
+            }
+            
+            if (dropdownLogoutBtn) {
+                dropdownLogoutBtn.addEventListener('click', handleLogout);
+            }
+        });
+
+        function updateUserMenu(user) {
+            const userName = user.nombreEmpresa || 'Moderador';
+            const userEmail = user.email || 'email@example.com';
+            const initial = userName.charAt(0).toUpperCase();
+
+            // Update button
+            const userNameEl = document.getElementById('userName');
+            const userInitialEl = document.getElementById('userInitial');
+            
+            if (userNameEl) userNameEl.textContent = userName;
+            if (userInitialEl) userInitialEl.textContent = initial;
+
+            // Update dropdown
+            const dropdownUserNameEl = document.getElementById('dropdownUserName');
+            const dropdownUserEmailEl = document.getElementById('dropdownUserEmail');
+            
+            if (dropdownUserNameEl) dropdownUserNameEl.textContent = userName;
+            if (dropdownUserEmailEl) dropdownUserEmailEl.textContent = userEmail;
+        }
+    </script>
+</body>
+</html>
+

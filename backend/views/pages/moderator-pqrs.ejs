@@ -1,0 +1,387 @@
+
+<section class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8" data-aos="fade-up">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestión de PQRS</h1>
+                    <p class="text-gray-600">Responde peticiones, quejas, reclamos y sugerencias</p>
+                </div>
+                <a href="/moderator" class="text-blue-600 hover:text-blue-700 font-medium">
+                    ← Volver al Panel
+                </a>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="mb-6 flex gap-4 flex-wrap" data-aos="fade-up" data-aos-delay="100">
+            <button onclick="loadPQRS('pendiente')" class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 font-medium">
+                Pendientes
+            </button>
+            <button onclick="loadPQRS('en_proceso')" class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 font-medium">
+                En Proceso
+            </button>
+            <button onclick="loadPQRS('resuelto')" class="px-4 py-2 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 font-medium">
+                Resueltos
+            </button>
+            <button onclick="loadPQRS('cerrado')" class="px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 font-medium">
+                Cerrados
+            </button>
+            <button onclick="loadPQRS('')" class="px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 font-medium">
+                Todos
+            </button>
+        </div>
+
+        <!-- PQRS List -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+            <div id="pqrsList" class="p-6">
+                <div class="text-center py-12">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                    <p class="mt-4 text-gray-600">Cargando PQRS...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal for PQRS Details and Response -->
+<div id="pqrsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Detalles del PQRS</h2>
+                <button onclick="closePQRSModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="pqrsDetails" class="space-y-4 mb-6"></div>
+            <div id="responseSection" class="border-t pt-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Respuesta</label>
+                <textarea id="responseText" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Escribe tu respuesta aquí..."></textarea>
+                <div class="mt-4 flex gap-4">
+                    <button onclick="respondPQRS()" class="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-medium">
+                        Responder
+                    </button>
+                    <button onclick="updatePQRSStatus('en_proceso')" class="px-4 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 font-medium">
+                        En Proceso
+                    </button>
+                    <button onclick="updatePQRSStatus('cerrado')" class="px-4 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-medium">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentFilter = 'pendiente';
+let currentPQRSId = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadPQRS('pendiente');
+});
+
+async function loadPQRS(estado) {
+    currentFilter = estado;
+    const token = localStorage.getItem('token');
+    
+    // Datos mock
+    const mockPQRS = [
+        {
+            _id: '1',
+            tipo: 'peticion',
+            asunto: 'Solicitud de información',
+            descripcion: 'Necesito información sobre cómo participar en eventos',
+            estado: estado || 'pendiente',
+            usuario: { nombreEmpresa: 'Empresa ABC', email: 'abc@example.com' },
+            createdAt: new Date()
+        },
+        {
+            _id: '2',
+            tipo: 'queja',
+            asunto: 'Problema con registro',
+            descripcion: 'No puedo completar mi registro de usuario',
+            estado: estado || 'pendiente',
+            usuario: { nombreEmpresa: 'Startup XYZ', email: 'xyz@example.com' },
+            createdAt: new Date()
+        },
+        {
+            _id: '3',
+            tipo: 'sugerencia',
+            asunto: 'Mejora en la plataforma',
+            descripcion: 'Sugerencia para mejorar la interfaz de usuario',
+            estado: estado || 'pendiente',
+            usuario: { nombreEmpresa: 'Tech Corp', email: 'tech@example.com' },
+            createdAt: new Date()
+        }
+    ].filter(p => !estado || p.estado === estado);
+
+    if (!token) {
+        setTimeout(() => displayPQRS(mockPQRS), 300);
+        return;
+    }
+
+    const url = estado ? `/api/moderator/pqrs?estado=${estado}` : '/api/moderator/pqrs';
+    
+    try {
+        const res = await fetch(url, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) throw new Error('Error al cargar PQRS');
+
+        const pqrsList = await res.json();
+        displayPQRS(pqrsList);
+    } catch (error) {
+        console.log('Modo solo frontend - usando datos mock');
+        displayPQRS(mockPQRS);
+    }
+}
+
+function displayPQRS(pqrsList) {
+    const container = document.getElementById('pqrsList');
+    
+    if (pqrsList.length === 0) {
+        container.innerHTML = `
+            <div class="text-center py-12">
+                <p class="text-gray-600">No hay PQRS con este estado</p>
+            </div>
+        `;
+        return;
+    }
+
+    const tipoLabels = {
+        'peticion': 'Petición',
+        'queja': 'Queja',
+        'reclamo': 'Reclamo',
+        'sugerencia': 'Sugerencia'
+    };
+
+    const estadoLabels = {
+        'pendiente': 'Pendiente',
+        'en_proceso': 'En Proceso',
+        'resuelto': 'Resuelto',
+        'cerrado': 'Cerrado'
+    };
+
+    container.innerHTML = pqrsList.map(pqrs => `
+        <div class="border-b border-gray-200 last:border-0 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex-1">
+                    <div class="flex items-center gap-4">
+                        <div>
+                            <h3 class="font-semibold text-gray-900">${pqrs.asunto}</h3>
+                            <p class="text-sm text-gray-600 mt-1">${pqrs.descripcion.substring(0, 100)}${pqrs.descripcion.length > 100 ? '...' : ''}</p>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="px-2 py-1 text-xs rounded-full ${
+                                    pqrs.estado === 'resuelto' ? 'bg-green-100 text-green-800' :
+                                    pqrs.estado === 'en_proceso' ? 'bg-blue-100 text-blue-800' :
+                                    pqrs.estado === 'cerrado' ? 'bg-gray-100 text-gray-800' :
+                                    'bg-yellow-100 text-yellow-800'
+                                }">
+                                    ${estadoLabels[pqrs.estado] || pqrs.estado}
+                                </span>
+                                <span class="px-2 py-1 text-xs bg-purple-100 text-purple-800 rounded-full">
+                                    ${tipoLabels[pqrs.tipo] || pqrs.tipo}
+                                </span>
+                                ${pqrs.usuario ? `
+                                    <span class="text-xs text-gray-500">
+                                        Por: ${pqrs.usuario.nombreEmpresa || pqrs.usuario.email}
+                                    </span>
+                                ` : ''}
+                                <span class="text-xs text-gray-500">
+                                    ${new Date(pqrs.createdAt).toLocaleDateString('es-ES')}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="viewPQRSDetails('${pqrs._id}')" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 font-medium">
+                        Ver Detalles
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+async function viewPQRSDetails(pqrsId) {
+    currentPQRSId = pqrsId;
+    const token = localStorage.getItem('token');
+    
+    // Datos mock
+    const mockPQRS = {
+        _id: pqrsId,
+        tipo: 'peticion',
+        asunto: 'Solicitud de información',
+        descripcion: 'Necesito información sobre cómo participar en eventos y qué requisitos debo cumplir para poder registrarme como empresa.',
+        estado: 'pendiente',
+        usuario: { nombreEmpresa: 'Empresa ABC', email: 'abc@example.com' },
+        createdAt: new Date()
+    };
+    
+    if (!token) {
+        displayPQRSModal(mockPQRS);
+        return;
+    }
+    
+    try {
+        const res = await fetch(`/api/moderator/pqrs/${pqrsId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) throw new Error('Error al cargar PQRS');
+
+        const pqrs = await res.json();
+        displayPQRSModal(pqrs);
+    } catch (error) {
+        console.log('Modo solo frontend - usando datos mock');
+        displayPQRSModal(mockPQRS);
+    }
+}
+
+function displayPQRSModal(pqrs) {
+    const tipoLabels = {
+        'peticion': 'Petición',
+        'queja': 'Queja',
+        'reclamo': 'Reclamo',
+        'sugerencia': 'Sugerencia'
+    };
+
+    const details = document.getElementById('pqrsDetails');
+    details.innerHTML = `
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <p class="text-sm text-gray-600">Tipo</p>
+                <p class="font-semibold">${tipoLabels[pqrs.tipo] || pqrs.tipo}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Estado</p>
+                <p class="font-semibold">${pqrs.estado}</p>
+            </div>
+            <div class="col-span-2">
+                <p class="text-sm text-gray-600">Asunto</p>
+                <p class="font-semibold">${pqrs.asunto}</p>
+            </div>
+        </div>
+        <div class="mt-4 pt-4 border-t">
+            <p class="text-sm text-gray-600 mb-2">Descripción</p>
+            <p class="text-gray-900">${pqrs.descripcion}</p>
+        </div>
+        ${pqrs.usuario ? `
+            <div class="mt-4 pt-4 border-t">
+                <p class="text-sm font-semibold text-gray-700 mb-2">Usuario</p>
+                <p class="text-sm text-gray-600">${pqrs.usuario.nombreEmpresa || pqrs.usuario.email}</p>
+            </div>
+        ` : ''}
+        ${pqrs.respuesta ? `
+            <div class="mt-4 pt-4 border-t">
+                <p class="text-sm font-semibold text-gray-700 mb-2">Respuesta</p>
+                <p class="text-gray-900 bg-gray-50 p-3 rounded-lg">${pqrs.respuesta}</p>
+                ${pqrs.fechaRespuesta ? `
+                    <p class="text-xs text-gray-500 mt-2">
+                        Respondido el: ${new Date(pqrs.fechaRespuesta).toLocaleDateString('es-ES')}
+                    </p>
+                ` : ''}
+            </div>
+        ` : ''}
+        <div class="mt-4 pt-4 border-t">
+            <p class="text-xs text-gray-500">
+                Creado el: ${new Date(pqrs.createdAt).toLocaleDateString('es-ES')}
+            </p>
+        </div>
+    `;
+    
+    const responseText = document.getElementById('responseText');
+    if (pqrs.respuesta) {
+        responseText.value = pqrs.respuesta;
+    } else {
+        responseText.value = '';
+    }
+    
+    document.getElementById('pqrsModal').classList.remove('hidden');
+}
+
+function closePQRSModal() {
+    document.getElementById('pqrsModal').classList.add('hidden');
+    currentPQRSId = null;
+}
+
+async function respondPQRS() {
+    if (!currentPQRSId) return;
+    
+    const respuesta = document.getElementById('responseText').value.trim();
+    if (!respuesta) {
+        alert('Por favor, escribe una respuesta');
+        return;
+    }
+
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+        alert('PQRS respondido exitosamente (modo demo)');
+        closePQRSModal();
+        loadPQRS(currentFilter);
+        return;
+    }
+    
+    try {
+        const res = await fetch(`/api/moderator/pqrs/${currentPQRSId}/responder`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ respuesta, estado: 'resuelto' })
+        });
+
+        if (!res.ok) throw new Error('Error al responder PQRS');
+
+        alert('PQRS respondido exitosamente');
+        closePQRSModal();
+        loadPQRS(currentFilter);
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al responder PQRS');
+    }
+}
+
+async function updatePQRSStatus(estado) {
+    if (!currentPQRSId) return;
+    
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+        alert(`Estado actualizado a: ${estado} (modo demo)`);
+        closePQRSModal();
+        loadPQRS(currentFilter);
+        return;
+    }
+    
+    try {
+        const res = await fetch(`/api/moderator/pqrs/${currentPQRSId}/estado`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ estado })
+        });
+
+        if (!res.ok) throw new Error('Error al actualizar estado');
+
+        alert(`Estado actualizado a: ${estado}`);
+        closePQRSModal();
+        loadPQRS(currentFilter);
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al actualizar estado del PQRS');
+    }
+}
+</script>
+
